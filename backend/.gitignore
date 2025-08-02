@@ -1,0 +1,27 @@
+# Dependency directories
+node_modules/
+
+# Environment variables
+# Ignore all .env files
+.env*
+# But DO NOT ignore the example file
+!.env.example
+
+# Build output
+dist/
+build/
+
+# Log files
+*.log
+logs/
+npm-debug.log*
+yarn-error.log
+yarn-debug.log
+
+# Operating System generated files
+.DS_Store
+Thumbs.db
+
+# Editor directories
+.vscode/
+.idea/
