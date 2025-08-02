@@ -1,32 +1,29 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
-
+import apiClient from '../api/apiClient'; // 1. Import the client
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const { setAuthUser } = useAuthContext();
 
-  const handleSubmit = async (e) => {
+
+const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
 
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || "Failed to login");
-      }
-      setAuthUser(data); // Update context and local storage
+        // 2. Replace the fetch call with the apiClient
+        const data = await apiClient('/api/auth/login', {
+            body: { email, password } 
+        });
+        
+        setAuthUser(data); // Update context and local storage
     } catch (err) {
-      setError(err.message);
+        setError(err.message);
     }
-  };
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuthContext } from '../hooks/useAuthContext';
-
+ import apiClient from '../api/apiClient'; 
 const SignUpPage = () => {
     const [inputs, setInputs] = useState({
         fullName: "",
@@ -12,28 +12,25 @@ const SignUpPage = () => {
     });
     const [error, setError] = useState(null);
     const { setAuthUser } = useAuthContext();
+// 1. Import the client
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError(null);
-        if (inputs.password !== inputs.confirmPassword) {
-            return setError("Passwords do not match");
-        }
-        try {
-            const res = await fetch("/api/auth/signup", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(inputs)
-            });
-            const data = await res.json();
-            if (!res.ok) {
-                throw new Error(data.error || "Failed to sign up");
-            }
-            setAuthUser(data); // Update context and local storage
-        } catch (err) {
-            setError(err.message);
-        }
-    };
+const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
+    if (inputs.password !== inputs.confirmPassword) {
+        return setError("Passwords do not match");
+    }
+    try {
+        // 2. Replace the fetch call with the apiClient
+        const data = await apiClient('/api/auth/signup', {
+            body: inputs
+        });
+        
+        setAuthUser(data); // Update context and local storage
+    } catch (err) {
+        setError(err.message);
+    }
+};
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">

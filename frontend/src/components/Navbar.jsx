@@ -2,7 +2,7 @@ import React from 'react';
 // Import NavLink to handle active link styling
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../hooks/useAuthContext';
-
+import apiClient from '../api/apiClient'; // The apiClient is now used
 // Import assets
 import daylight from '../assets/daylight.png';
 import farmer from '../assets/farmer.jpg';
@@ -20,13 +20,14 @@ const Navbar = ({ theme, setTheme }) => {
 
     const handleLogout = async () => {
         try {
-            const res = await fetch("/api/auth/logout", { method: "POST" });
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.error);
+            // --- THIS IS THE CHANGE ---
+            // Replaced the multi-line fetch with a single apiClient call.
+            await apiClient('/api/auth/logout', { method: 'POST' });
             
             setAuthUser(null);
             navigate("/login");
         } catch (error) {
+            // The catch block will now handle errors from the apiClient
             console.error(error.message);
         }
     };
@@ -151,7 +152,7 @@ const Navbar = ({ theme, setTheme }) => {
                         <button onClick={handleLogout} style={styles.logoutButton}>Logout</button>
                     </>
                 ) : (
-                     <NavLink to="/login" style={defaultLinkStyle}>Login</NavLink>
+                         <NavLink to="/login" style={defaultLinkStyle}>Login</NavLink>
                 )}
                 <img onClick={toggle_mode} src={theme === 'light' ? sunnyday : daylight} alt="Toggle theme" style={styles.toggleIcon} />
             </div>
